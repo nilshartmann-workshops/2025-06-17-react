@@ -1,0 +1,68 @@
+# Get all cards
+GET http://localhost:7100/cards
+
+###
+
+###
+
+POST http://localhost:7100/cards/C7/likes
+
+###
+# Add new card
+
+POST http://localhost:7100/cards
+content-type: application/json
+
+{
+  "message": "moin!",
+  "imagePosition": "left" ,
+  "image": {
+    "name": "a1.png",
+    "caption": "jo!"
+  }
+}
+
+###
+
+# Update
+PUT http://localhost:7000/posts
+content-type: application/json
+
+{
+  "id": "P6",
+  "title": "Updated Post",
+  "body": "New Body"
+}
+
+### 
+
+# DELETE
+DELETE http://localhost:7000/posts/P7
+
+###
+
+# With Authorization
+GET http://localhost:7000/posts
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMiIsImlhdCI6MTU3OTM3NzkxOSwiZXhwIjoxODk0OTUzOTE5fQ.BZHU2zh_kt9hda7uDgTj5UfDrWmt0UIPKwkG3a0Cs8E
+
+###
+
+POST http://localhost:7000/posts
+content-type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMiIsImlhdCI6MTU3OTM3NzkxOSwiZXhwIjoxODk0OTUzOTE5fQ.BZHU2zh_kt9hda7uDgTj5UfDrWmt0UIPKwkG3a0Cs8E
+
+{
+    "title": "My new Blog Post",
+    "body": "Lorem Ipsum"
+}
+
+###
+
+# Login
+POST http://localhost:7000/login
+content-type: application/json
+
+{
+    "login": "nils",
+    "password": "hihhihi"
+}
