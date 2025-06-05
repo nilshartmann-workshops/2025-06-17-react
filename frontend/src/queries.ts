@@ -14,7 +14,6 @@ import {
 
 export const apiKy = _ky.extend({
   retry: 0,
-  timeout: 10_000,
   prefixUrl: "http://localhost:7200/api",
 });
 
@@ -31,9 +30,7 @@ export const fetchReservationOpts = (reservationId: string) =>
   queryOptions({
     queryKey: ["reservations", "detail", reservationId],
     async queryFn() {
-      const result = await apiKy
-        .get(`reservations/${reservationId}?slow=2400`)
-        .json();
+      const result = await apiKy.get(`reservations/${reservationId}`).json();
       return Reservation.parse(result);
     },
   });

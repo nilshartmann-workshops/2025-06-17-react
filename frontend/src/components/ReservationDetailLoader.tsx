@@ -4,20 +4,41 @@ import {
   Card,
   CardContent,
   Grid,
+  Paper,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useQueryErrorResetBoundary,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Suspense } from "react";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 
 import { fetchReservationOpts } from "../queries.ts";
 import ReservationDetailCard from "./ReservationDetailCard.tsx";
 import TimeRangeChip from "./TimeRangeChip.tsx";
-
 // Man könnte sich auch vorstellen,
 //  ReservationDetailLoader + ReservationDetail in einer Datei haben und beide
 //   exportieren,je nachdem, wie man die verwenden will
+
+function MyErrorBoundary(props: FallbackProps) {
+  return (
+    <Paper>
+      <Stack padding={2}>
+        <Typography variant={"h2"}>Error!</Typography>
+        {props.error.toString()}
+        <Button
+          variant={"contained"}
+          onClick={() => props.resetErrorBoundary()}
+        >
+          Retry!
+        </Button>
+      </Stack>
+    </Paper>
+  );
+}
 
 type ReservationDetailLoaderProps = {
   reservationId: string;
@@ -25,10 +46,13 @@ type ReservationDetailLoaderProps = {
 export default function ReservationDetailLoader({
   reservationId,
 }: ReservationDetailLoaderProps) {
+  const { reset } = useQueryErrorResetBoundary();
   return (
-    <Suspense fallback={<ReservationDetailPlaceholder />}>
-      <ReservationDetail reservationId={reservationId} />
-    </Suspense>
+    <ErrorBoundary FallbackComponent={MyErrorBoundary} onReset={reset}>
+      <Suspense fallback={<ReservationDetailPlaceholder />}>
+        <ReservationDetail reservationId={reservationId} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 
