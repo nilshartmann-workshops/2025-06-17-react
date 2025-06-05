@@ -8,34 +8,24 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
-import ReservationDetailDialog from "../../components/ReservationDetailDialog.tsx";
-import StatusChip from "../../components/StatusChip.tsx";
-import TimeRangeChip from "../../components/TimeRangeChip.tsx";
-import { fetchReservationListOpts } from "../../queries.ts";
+import { Reservation } from "../types.ts";
+import ReservationDetailDialog from "./ReservationDetailDialog.tsx";
+import StatusChip from "./StatusChip.tsx";
+import TimeRangeChip from "./TimeRangeChip.tsx";
 
-export default function ReservationTable() {
-  const [p] = useSearchParams();
-  const orderBy: any = p.get("orderBy") || "";
-
-  const { data: reservations } = useSuspenseQuery(
-    fetchReservationListOpts(orderBy),
-  );
-
-  const [selectedReservation, setSelectedReservation] = useState<string | null>(
-    null,
-  );
-
-  const handleReservationSelected = (reservationId: string) => {
-    if (selectedReservation === reservationId) {
-      setSelectedReservation(null);
-    } else {
-      setSelectedReservation(reservationId);
-    }
-  };
+type ReservationTableProps = {
+  reservations: Reservation[];
+};
+export default function ReservationTable({
+  reservations,
+}: ReservationTableProps) {
+  const [searchParams] = useSearchParams();
+  const [selectedReservationId, setSelectedReservationId] = useState<
+    string | null
+  >(null);
 
   return (
     <TableContainer component={Paper}>
@@ -48,7 +38,7 @@ export default function ReservationTable() {
             <TableCell>Guests</TableCell>
             <TableCell>Specials</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>...</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -58,9 +48,8 @@ export default function ReservationTable() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell
-                component="th"
-                scope="row"
-                onClick={() => handleReservationSelected(r.id)}
+                style={{ cursor: "pointer" }}
+                onClick={() => setSelectedReservationId(r.id)}
               >
                 {r.foodTruck}
               </TableCell>
@@ -74,7 +63,10 @@ export default function ReservationTable() {
                 <StatusChip status={r.status} />
               </TableCell>
               <TableCell>
-                <Button to={`/reservations/${r.id}`} component={Link}>
+                <Button
+                  to={`/reservations/${r.id}?${searchParams.toString()}`}
+                  component={Link}
+                >
                   Edit
                 </Button>
               </TableCell>
@@ -82,11 +74,10 @@ export default function ReservationTable() {
           ))}
         </TableBody>
       </Table>
-      {selectedReservation && (
+      {selectedReservationId && (
         <ReservationDetailDialog
-          open={true}
-          onClose={() => setSelectedReservation(null)}
-          reservationId={selectedReservation}
+          onClose={() => setSelectedReservationId(null)}
+          reservationId={selectedReservationId}
         />
       )}
     </TableContainer>

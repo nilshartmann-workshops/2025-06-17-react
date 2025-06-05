@@ -3,7 +3,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Chip, Grid, Skeleton, Typography } from "@mui/material";
 
 import type { TimeRange } from "../types.ts";
-import { useDateFormatter } from "./use-date-formatter.ts";
+import { getDateFormatter } from "./use-date-formatter.ts";
 
 type TimeRangeChipRegularProps = {
   range: TimeRange;
@@ -21,12 +21,8 @@ type TimeRangeChipProps =
   | TimeRangeChipRegularProps
   | TimeRangeChipPlaceholderProps;
 
-// Diskutieren:
-//  ist der Komponentenschnitt so gut?
-//   -> vielleicht lieber zwei Komponenten
-
 export default function TimeRangeChip(props: TimeRangeChipProps) {
-  const dateFormatter = useDateFormatter();
+  const dateFormatter = getDateFormatter();
 
   const variant = props.variant || "compact";
 

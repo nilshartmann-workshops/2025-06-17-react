@@ -80,28 +80,3 @@ export default function TimezoneChooser() {
     </div>
   );
 }
-
-//
-// const handleChange = (event: SelectChangeEvent) => {
-//   timezoneContext.setTimezone(event.target.value as string);
-// };
-//
-// return (
-//   <FormControl margin="normal">
-//     <InputLabel id="timezone-selector-label">Timezone</InputLabel>
-//     <Select
-//       sx={{ color: "white" }}
-//       label="Timezone"
-//       labelId={"timezone-selector-label"}
-//       fullWidth
-//       value={timezoneContext.timezone}
-//       onChange={handleChange}
-//     >
-//       {Timezones.map((f) => (
-//         <MenuItem key={f} value={f}>
-//           {f}
-//         </MenuItem>
-//       ))}
-//     </Select>
-//   </FormControl>
-// );

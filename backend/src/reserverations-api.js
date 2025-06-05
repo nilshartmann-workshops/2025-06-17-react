@@ -3,10 +3,7 @@ import dayjs from "dayjs";
 
 export function setupReservationApi(app) {
   app.get("/api/reservations", (req, res) => {
-    const orderBy = req.query.orderBy;
-    if (!orderBy) {
-      return res.status(200).json(reservations);
-    }
+    const orderBy = req.query.orderBy || "start";
 
     const allowedOrderBy = ["foodTruck", "customerName", "status", "start"];
 
@@ -20,25 +17,43 @@ export function setupReservationApi(app) {
     return res.status(200).json(sortReservations(reservations, orderBy));
   });
 
+  const allowedProperties = [
+    "foodTruckId",
+    "customerName",
+    "timeRange",
+    "expectedGuests",
+    "specialRequests",
+  ]
+
   app.post("/api/reservations", (req, res) => {
+    const errors = [];
+
     const {
-      foodTruck,
+      foodTruckId,
       customerName,
       timeRange,
       expectedGuests,
       specialRequests,
     } = req.body || {};
 
-    const errors = [];
-    if (!foodTruck) {
-      errors.push({ error: "'foodTruck' must be specified" });
+    const invalidProperties = Object
+      .keys(req.body || {})
+      .filter(key => !allowedProperties.includes(key));
+    if (invalidProperties.length) {
+      errors.push({"error": `Invalid properties in payload: '${invalidProperties}'. Only properties '${allowedProperties}' allowed`})
     }
 
-    if (!foodtrucks.find((f) => f.name === foodTruck)) {
+
+    if (!foodTruckId) {
+      errors.push({ error: "'foodTruckId' must be specified" });
+    }
+
+    const foodTruck = foodtrucks.find((f) => f.id === foodTruckId);
+
+    if (!foodTruck) {
       errors.push({
         error:
-          "'foodTruck' must be valid foodtruck, one of: " +
-          foodtrucks.map((f) => f.name).join(", "),
+          `Given 'foodTruckId' with value '${foodTruckId}' does not exists. Valid foodTruckIds: ${foodtrucks.map((f) => `'${f.id}'`).join(", ")}`
       });
     }
 
@@ -77,6 +92,14 @@ export function setupReservationApi(app) {
       if (expectedGuests < 1) {
         errors.push({ error: "'expectedGuests' must be positive number" });
       }
+
+      if (expectedGuests > 200) {
+        errors.push({ error: "'expectedGuests' must be equal or less than 200" });
+      }
+    }
+
+    if (typeof specialRequests === "string" && specialRequests.length===0) {
+      errors.push({ error: "'specialRequests' must either be a non empty string or undefined" });
     }
 
     if (errors.length) {
@@ -85,7 +108,7 @@ export function setupReservationApi(app) {
 
     const newReservation = {
       id: String(reservations.length + 1),
-      foodTruck,
+      foodTruck: foodTruck.name,
       customerName,
       timeRange,
       expectedGuests,

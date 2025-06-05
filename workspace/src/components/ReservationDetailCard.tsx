@@ -8,8 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useSetStatusMutation } from "../queries.ts";
-import { Reservation } from "../types.ts";
+import type { Reservation } from "../types.ts";
 import StatusChip from "./StatusChip.tsx";
 import TimeRangeChip from "./TimeRangeChip.tsx";
 
@@ -17,15 +16,9 @@ type ReservationDetailCardProps = {
   reservation: Reservation;
 };
 
-// Könnte in einer Anwendung auch in ReservationDetailLoader sein
-//   hier nur aufgeteilt, damit man in der Demo
-//    eine Reservation auch ohne Suspense verwenden kann
-
 export default function ReservationDetailCard({
   reservation,
 }: ReservationDetailCardProps) {
-  const mutation = useSetStatusMutation(reservation.id);
-
   return (
     <Card
       sx={{ minWidth: 600, maxWidth: 600, mx: "auto", mt: 4, boxShadow: 3 }}
@@ -34,10 +27,6 @@ export default function ReservationDetailCard({
         <Typography variant="h5" gutterBottom>
           Reservation for {reservation.customerName}
         </Typography>
-
-        <Box sx={{ mb: 2 }}>
-          <StatusChip status={reservation.status} variant={"lg"} />
-        </Box>
 
         <Grid container spacing={2}>
           <Grid size={6}>
@@ -60,18 +49,13 @@ export default function ReservationDetailCard({
           )}
         </Grid>
         <Stack direction="row" spacing={2} mt={3}>
-          <Button
-            variant="contained"
-            disabled={reservation.status === "Confirmed"}
-            onClick={() => mutation.mutate("Confirmed")}
-          >
+          <Box sx={{ mb: 2 }}>
+            <StatusChip status={reservation.status} variant={"lg"} />
+          </Box>
+          <Button variant="text" disabled={reservation.status === "Confirmed"}>
             Confirm
           </Button>
-          <Button
-            variant="outlined"
-            disabled={reservation.status === "Rejected"}
-            onClick={() => mutation.mutate("Rejected")}
-          >
+          <Button variant="text" disabled={reservation.status === "Rejected"}>
             Reject
           </Button>
         </Stack>

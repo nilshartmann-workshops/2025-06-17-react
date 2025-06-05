@@ -8,21 +8,19 @@ import {
 } from "@mui/material";
 import React from "react";
 
-import ReservationDetailLoader from "./ReservationDetailLoader.tsx";
-
 type ReservationDetailDialogProps = {
-  open: boolean;
   onClose: () => void;
   reservationId: string;
 };
 
 export default function ReservationDetailDialog({
-  open,
   onClose,
   reservationId,
 }: ReservationDetailDialogProps) {
+  console.log(`TODO: Reservation mit Id ${reservationId} laden!`);
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={true} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle sx={{ m: 0, p: 2 }}>
         Reservation Details
         <IconButton
@@ -41,7 +39,13 @@ export default function ReservationDetailDialog({
 
       <DialogContent dividers>
         <Box sx={{ mt: 1 }}>
-          <ReservationDetailLoader reservationId={reservationId} />
+          {/*
+
+          TODO:
+          - mit getByReservationId-Query die Reservation laden
+          - die geladene Reservation mit <ReservationDetailCard /> hier anzeigen
+
+          */}
         </Box>
       </DialogContent>
     </Dialog>

@@ -1,7 +1,7 @@
 import { Box, Button, ButtonGroup, type ButtonProps } from "@mui/material";
 import { Link, useSearchParams } from "react-router-dom";
 
-import type { OrderBy } from "../../types.ts";
+import type { OrderBy } from "../types.ts";
 
 export default function OrderButtonBar() {
   const [searchParams] = useSearchParams({ orderBy: "start" });
