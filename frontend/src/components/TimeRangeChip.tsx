@@ -37,7 +37,7 @@ export default function TimeRangeChip(props: TimeRangeChipProps) {
           props.placeholder ? (
             <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
           ) : (
-            dateFormatter.shortDateTime(props.range)
+            dateFormatter.shortTimeRange(props.range)
           )
         }
         variant={"outlined"}

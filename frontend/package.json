@@ -6,6 +6,7 @@
   "scripts": {
     "backend": "cd ../backend && pnpm start",
     "dev": "vite --port 3000",
+    "check": "pnpm prettier:check && pnpm lint && pnpm tsc --noEmit",
     "test": "vitest",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

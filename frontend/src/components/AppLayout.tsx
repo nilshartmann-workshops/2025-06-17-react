@@ -8,9 +8,14 @@ import {
   Toolbar,
   Typography,
   Link,
+  IconButton,
+  MenuItem,
+  Menu,
 } from "@mui/material";
 import { Link as RouterLink, Outlet } from "react-router-dom";
-
+import TimezoneChooser from "./TimezoneChooser.tsx";
+import { useState } from "react";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 export default function AppLayout() {
   return (
     <Container>
@@ -35,6 +40,8 @@ export default function AppLayout() {
               <Button color="inherit" component={RouterLink} to={"/create"}>
                 Reserve your truck
               </Button>
+
+              <TimezoneChooser />
             </Toolbar>
           </AppBar>
         </Box>

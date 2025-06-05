@@ -1,14 +1,6 @@
 import { z } from "zod/v4";
 import dayjs from "dayjs";
 
-export interface TimeRange {
-  // datetime with timezone offset in ISO format
-  start: string;
-
-  // datetime with timezone offset in ISO format
-  end: string;
-}
-
 // export type Reservation = {
 //   id: string;
 //   foodTruck: string;
@@ -18,10 +10,12 @@ export interface TimeRange {
 //   status: ReservationStatus;
 // }
 
+export const IsoDateTimeWithOffset = z.iso.datetime({ offset: true });
+
 export const TimeRange = z
   .object({
-    start: z.iso.datetime({ offset: true }),
-    end: z.iso.datetime({ offset: true }),
+    start: IsoDateTimeWithOffset,
+    end: IsoDateTimeWithOffset,
   })
   .refine(
     (val) => {
@@ -29,9 +23,14 @@ export const TimeRange = z
     },
     {
       message: "end must be after before",
-      path: ["end"], // path of error
+      path: ["end"],
     },
   );
+
+export type TimeRange = z.infer<typeof TimeRange>;
+
+export const ReservationStatus = z.enum(["Requested", "Confirmed", "Rejected"]);
+export type ReservationStatus = z.infer<typeof ReservationStatus>;
 
 export const Reservation = z.object({
   id: z.string(),
@@ -40,10 +39,8 @@ export const Reservation = z.object({
   timeRange: TimeRange,
   expectedGuests: z.number(),
   specialRequests: z.string().nullish(),
-  status: z.enum(["Requested", "Confirmed", "Rejected"]),
+  status: ReservationStatus,
 });
-
-export type ReservationStatus = "Requested" | "Confirmed" | "Rejected";
 
 export type Reservation = z.infer<typeof Reservation>;
 

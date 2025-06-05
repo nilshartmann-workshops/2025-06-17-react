@@ -63,9 +63,7 @@ const ReservationFormState = z.object({
     .transform((val) => {
       // ACHTUNG! Das Transform führt NICHT dazu, das man den transformierten
       // Wert im State hat (in den DATA im Submit aber schon!)
-      console.log("VAL", val);
       if (val === "") {
-        console.log("set val to undefined");
         return null;
       }
       return val;

@@ -21,9 +21,7 @@ export const fetchReservationListOpts = (orderBy: OrderBy = "") =>
   queryOptions({
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
-      const result = await apiKy
-        .get(`reservations?orderBy=${orderBy}&slow=2400`)
-        .json();
+      const result = await apiKy.get(`reservations?orderBy=${orderBy}`).json();
       return Reservation.array().parse(result);
     },
   });
@@ -42,6 +40,7 @@ export const fetchReservationOpts = (reservationId: string) =>
 export const fetchFoodTrucksOpts = () =>
   queryOptions({
     queryKey: ["foodtrucks", "list"],
+    staleTime: 10_000, // wir gehen davon aus, dass sich die vorhandenen foodtrucks nicht so oft ändern...
     async queryFn() {
       const result = await apiKy.get(`foodtrucks`).json();
       return GetFoodtrucksResponse.parse(result);

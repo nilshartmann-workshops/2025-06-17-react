@@ -1,14 +1,18 @@
 import dayjs from "dayjs";
 import type { TimeRange } from "../types.ts";
+import { useTheme } from "@mui/material";
+import { useTimezoneContext } from "./TimezoneContext.tsx";
 
 export function useDateFormatter() {
+  const { timezone } = useTimezoneContext();
+
   return {
-    shortDateTime(range: TimeRange) {
-      return `${dayjs(range.start).format("DD.MM., HH:mm")} - ${dayjs(range.end).format("DD.MM., HH:mm")}`;
+    shortTimeRange(range: TimeRange) {
+      return `${dayjs(range.start).tz(timezone).format("DD.MM., HH:mm")} - ${dayjs(range.end).tz(timezone).format("DD.MM., HH:mm")}`;
     },
 
     longDateTime(dateTime: string) {
-      return `${dayjs(dateTime).format("DD. MMMM YYYY, HH:mm")}`;
+      return `${dayjs(dateTime).tz(timezone).format("DD. MMMM YYYY, HH:mm")}`;
     },
   };
 }
