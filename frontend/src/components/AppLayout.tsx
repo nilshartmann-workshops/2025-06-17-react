@@ -7,15 +7,11 @@ import {
   Stack,
   Toolbar,
   Typography,
-  Link,
-  IconButton,
-  MenuItem,
-  Menu,
 } from "@mui/material";
 import { Link as RouterLink, Outlet } from "react-router-dom";
+
 import TimezoneChooser from "./TimezoneChooser.tsx";
-import { useState } from "react";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+
 export default function AppLayout() {
   return (
     <Container>

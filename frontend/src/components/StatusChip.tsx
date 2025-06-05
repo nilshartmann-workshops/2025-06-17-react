@@ -1,9 +1,10 @@
-import type { ReservationStatus } from "../types.ts";
-import type { ReactNode } from "react";
-import { Chip } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import { Chip } from "@mui/material";
+
+import type { ReservationStatus } from "../types.ts";
+
 type StatusChipProps = {
   status: ReservationStatus;
   onClick?: () => void;

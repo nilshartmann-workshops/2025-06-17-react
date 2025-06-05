@@ -1,9 +1,10 @@
-import _ky from "ky";
 import {
   queryOptions,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import _ky from "ky";
+
 import {
   GetFoodtrucksResponse,
   type NewReservation,

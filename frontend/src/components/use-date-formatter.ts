@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
+
 import type { TimeRange } from "../types.ts";
-import { useTheme } from "@mui/material";
 import { useTimezoneContext } from "./TimezoneContext.tsx";
 
 export function useDateFormatter() {

@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import {
   Box,
   Button,
@@ -9,10 +8,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import TimeRangeChip from "./TimeRangeChip.tsx";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { fetchReservationOpts, useSetStatusMutation } from "../queries.ts";
+import { Suspense } from "react";
+
+import { fetchReservationOpts } from "../queries.ts";
 import ReservationDetailCard from "./ReservationDetailCard.tsx";
+import TimeRangeChip from "./TimeRangeChip.tsx";
 
 // Man könnte sich auch vorstellen,
 //  ReservationDetailLoader + ReservationDetail in einer Datei haben und beide

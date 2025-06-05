@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
+
 import { IsoDateTimeWithOffset, TimeRange } from "./types.ts";
-import dayjs from "dayjs";
-import { string } from "zod";
 
 describe("IsoDateTimeWithOffset", () => {
   it("should work", () => {

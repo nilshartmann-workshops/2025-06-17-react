@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
 import { Box, Container } from "@mui/material";
+import { useParams } from "react-router-dom";
+
 import ReservationDetailLoader from "../../components/ReservationDetailLoader.tsx";
 
 export default function ReservationRoute() {

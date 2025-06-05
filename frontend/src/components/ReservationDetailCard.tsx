@@ -1,4 +1,3 @@
-import { Reservation } from "../types.ts";
 import {
   Box,
   Button,
@@ -8,11 +7,11 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
+import { useSetStatusMutation } from "../queries.ts";
+import { Reservation } from "../types.ts";
 import StatusChip from "./StatusChip.tsx";
 import TimeRangeChip from "./TimeRangeChip.tsx";
-import { fetchReservationOpts, useSetStatusMutation } from "../queries.ts";
-import { Suspense } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 type ReservationDetailCardProps = {
   reservation: Reservation;

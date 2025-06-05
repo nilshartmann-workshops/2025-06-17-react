@@ -1,21 +1,13 @@
-import {
-  Divider,
-  FormControl,
-  IconButton,
-  InputLabel,
-  Menu,
-  MenuItem,
-  MenuList,
-  Select,
-  type SelectChangeEvent,
-} from "@mui/material";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import Check from "@mui/icons-material/Check";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { Divider, IconButton, Menu, MenuItem } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Check from "@mui/icons-material/Check";
-import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import { useTimezoneContext } from "./TimezoneContext.tsx";
 import { useState } from "react";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+
+import { useTimezoneContext } from "./TimezoneContext.tsx";
+
 const Timezones = [
   "America/Santiago",
   "Asia/Hong_Kong",

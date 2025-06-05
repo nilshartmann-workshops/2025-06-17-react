@@ -1,8 +1,9 @@
-import type { TimeRange } from "../types.ts";
-import { Chip, Grid, Skeleton, Typography } from "@mui/material";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { useDateFormatter } from "./use-date-formatter.ts";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { Chip, Grid, Skeleton, Typography } from "@mui/material";
+
+import type { TimeRange } from "../types.ts";
+import { useDateFormatter } from "./use-date-formatter.ts";
 
 type TimeRangeChipRegularProps = {
   range: TimeRange;

@@ -1,12 +1,13 @@
-import React from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Box,
-} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import React from "react";
+
 import ReservationDetailLoader from "./ReservationDetailLoader.tsx";
 
 type ReservationDetailDialogProps = {

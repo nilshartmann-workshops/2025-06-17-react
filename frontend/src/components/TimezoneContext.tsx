@@ -25,6 +25,7 @@ export default function TimezoneContextProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTimezoneContext() {
   const context = useContext(TimezoneContext);
   if (!context) {

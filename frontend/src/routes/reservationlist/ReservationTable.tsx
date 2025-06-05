@@ -1,6 +1,3 @@
-import { Link, useSearchParams } from "react-router-dom";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { fetchReservationListOpts } from "../../queries.ts";
 import {
   Button,
   Paper,
@@ -11,10 +8,14 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import TimeRangeChip from "../../components/TimeRangeChip.tsx";
-import StatusChip from "../../components/StatusChip.tsx";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+
 import ReservationDetailDialog from "../../components/ReservationDetailDialog.tsx";
+import StatusChip from "../../components/StatusChip.tsx";
+import TimeRangeChip from "../../components/TimeRangeChip.tsx";
+import { fetchReservationListOpts } from "../../queries.ts";
 
 export default function ReservationTable() {
   const [p] = useSearchParams();
