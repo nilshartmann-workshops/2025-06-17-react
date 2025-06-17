@@ -50,7 +50,28 @@ export const useSetStatusMutation = (reservationId: string) => {
         })
         .json();
     },
+    // // OPTIMISTIC UPDATE Variante "Cache optimistisch aktualisieren und ggf. zurückrollen"
+    // onMutate() {
+    //   // ggf. aktuelle Mutation canceln
+    //   // OPTIMISTIC UPDATE 1:
+    //   // aktuelle Reservation aus dem Cache holen
+    //   // aktuelle Reservation hier zurückliefern ("Context")
+    //   //   -> für Rollback
+    //   // "neue" Daten mit geänderten Daten in den Cache setzten
+    //   //  (queryClient.setData(...))
+    // },
+    // onError() {
+    //   // OPTIMISTIC UPDATE 2:
+    //   // hier wird der "context" (=> Rückgabe-Wert aus onMutate)
+    //   // übergeben,
+    //   // d.h. hier können wir den Context ("alte" Reserveration)
+    //   //   verwenden, um die "alte" Reservation wieder in den
+    //   //   Cache setzen ("Rollback")
+    // },
     onSuccess(data: unknown, input) {
+      // OPTIMISTIC UPDATE 3: hier u.U. nichts mehr notwendig,
+      //   weil in Schritt 1 die Daten im Cache schon
+      //   aktuell sind
       const currentReservation = queryClient.getQueryData(
         getReservationByIdOpts(reservationId).queryKey,
       );

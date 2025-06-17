@@ -22,6 +22,16 @@ export default function ReservationDetailCard({
 }: ReservationDetailCardProps) {
   const mutation = useSetStatusMutation(reservation.id);
 
+  // OPTIMISTIC UPDATE Variante "nur" UI aktualisieren, während Request läuft,
+  //   aber UI soll in ANDERER Komponente aktualisiert werden,
+  //   während Mutation läuft
+  // const x = useMutationState({
+  //   // mutationKey
+  //   }
+  // )
+  // x.loading, x.variables nutzen um in anderer Komponente
+  // "optimistische" Daten anzuzeigen
+
   return (
     <Card
       sx={{ minWidth: 600, maxWidth: 600, mx: "auto", mt: 4, boxShadow: 3 }}
@@ -53,7 +63,15 @@ export default function ReservationDetailCard({
         </Grid>
         <Stack direction="row" spacing={2} mt={3}>
           <Box sx={{ mb: 2 }}>
-            <StatusChip status={reservation.status} variant={"lg"} />
+            {/*
+               OPTIMISTIC UPDATE Variante "nur" UI aktualisieren, während Request läuft
+              */}
+            <StatusChip
+              status={
+                mutation.isPending ? mutation.variables : reservation.status
+              }
+              variant={"lg"}
+            />
           </Box>
           <Button
             onClick={() => mutation.mutate("Confirmed")}
