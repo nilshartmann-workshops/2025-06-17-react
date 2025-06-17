@@ -1,7 +1,11 @@
-import { queryOptions } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import __dont_use_ky from "ky";
 
-import { OrderBy, Reservation } from "./types.ts";
+import { OrderBy, Reservation, ReservationStatus } from "./types.ts";
 
 export const apiKy = __dont_use_ky.extend({
   // retries im Fehlerfall besser über TanStack Query machen
@@ -17,7 +21,7 @@ export function getReservationListOpts(orderBy: OrderBy) {
   return queryOptions({
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
-      const result = apiKy.get("reservations?orderBy=" + orderBy).json();
+      const result = await apiKy.get("reservations?orderBy=" + orderBy).json();
       return Reservation.array().parse(result);
     },
   });
@@ -31,3 +35,34 @@ export const getReservationByIdOpts = (reservationId: string) =>
       return Reservation.parse(result);
     },
   });
+
+export const useSetStatusMutation = (reservationId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    // mutationKey: ["setReservationStatus"],
+    //                  v---- Achtung! Immer nur ein Parameter,
+    //                         sonst Objekt verwenden
+    // async mutationFn(data: { status: ReservationStatus; comment: string }) {
+    async mutationFn(status: ReservationStatus) {
+      return apiKy
+        .put(`reservations/${reservationId}/status?slow=4000`, {
+          json: { status },
+        })
+        .json();
+    },
+    onSuccess(data: unknown, input) {
+      const currentReservation = queryClient.getQueryData(
+        getReservationByIdOpts(reservationId).queryKey,
+      );
+
+      if (!currentReservation) {
+        return;
+      }
+
+      queryClient.setQueryData(getReservationByIdOpts(reservationId).queryKey, {
+        ...currentReservation,
+        status: input,
+      });
+    },
+  });
+};

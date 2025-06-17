@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useSetStatusMutation } from "../queries.ts";
 import type { Reservation } from "../types.ts";
 import StatusChip from "./StatusChip.tsx";
 import TimeRangeChip from "./TimeRangeChip.tsx";
@@ -19,6 +20,8 @@ type ReservationDetailCardProps = {
 export default function ReservationDetailCard({
   reservation,
 }: ReservationDetailCardProps) {
+  const mutation = useSetStatusMutation(reservation.id);
+
   return (
     <Card
       sx={{ minWidth: 600, maxWidth: 600, mx: "auto", mt: 4, boxShadow: 3 }}
@@ -52,12 +55,21 @@ export default function ReservationDetailCard({
           <Box sx={{ mb: 2 }}>
             <StatusChip status={reservation.status} variant={"lg"} />
           </Box>
-          <Button variant="text" disabled={reservation.status === "Confirmed"}>
+          <Button
+            onClick={() => mutation.mutate("Confirmed")}
+            variant="text"
+            disabled={reservation.status === "Confirmed" || mutation.isPending}
+          >
             Confirm
           </Button>
-          <Button variant="text" disabled={reservation.status === "Rejected"}>
+          <Button
+            onClick={() => mutation.mutate("Rejected")}
+            variant="text"
+            disabled={reservation.status === "Rejected" || mutation.isPending}
+          >
             Reject
           </Button>
+          {mutation.isPending && <p>Status wird umgesetzt</p>}
         </Stack>
       </CardContent>
     </Card>
