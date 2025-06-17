@@ -10,7 +10,7 @@ export const apiKy = __dont_use_ky.extend({
 
   // 🤔 Welche Möglichkeiten gibt es, diesen Wert z.B. Deployment-abhängig
   //    zu setzen?
-  // prefixUrl: "http://localhost:7200/api",
+  prefixUrl: "http://localhost:7200/api",
 });
 
 export function getReservationListOpts(orderBy: OrderBy) {
@@ -18,11 +18,20 @@ export function getReservationListOpts(orderBy: OrderBy) {
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
       const reservations = apiKy
-        .get<
-          Reservation[]
-        >("http://localhost:7200/api/reservations?orderBy=" + orderBy)
+        .get<Reservation[]>("reservations?orderBy=" + orderBy)
         .json();
       return reservations;
     },
   });
 }
+
+export const getReservationByIdOpts = (reservationId: string) =>
+  queryOptions({
+    queryKey: ["reservations", "detail", reservationId],
+    async queryFn() {
+      const result = await apiKy
+        .get<Reservation>(`reservations/${reservationId}`)
+        .json();
+      return result;
+    },
+  });
