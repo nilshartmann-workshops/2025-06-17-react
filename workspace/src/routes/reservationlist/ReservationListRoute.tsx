@@ -1,4 +1,8 @@
 import { Box, Typography } from "@mui/material";
+import { useSuspenseQuery } from "@tanstack/react-query";
+
+import ReservationTable from "../../components/ReservationTable.tsx";
+import { getReservationListOpts } from "../../queries.ts";
 
 export default function ReservationListRoute() {
   return (
@@ -13,7 +17,13 @@ export default function ReservationListRoute() {
         </Typography>
       </Box>
 
-      <p>Todo</p>
+      <ReservationsLoader />
     </>
   );
+}
+
+function ReservationsLoader() {
+  const { data: reservations } = useSuspenseQuery(getReservationListOpts());
+  //
+  return <ReservationTable reservations={reservations} />;
 }
