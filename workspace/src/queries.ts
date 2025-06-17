@@ -17,10 +17,8 @@ export function getReservationListOpts(orderBy: OrderBy) {
   return queryOptions({
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
-      const reservations = apiKy
-        .get<Reservation[]>("reservations?orderBy=" + orderBy)
-        .json();
-      return reservations;
+      const result = apiKy.get("reservations?orderBy=" + orderBy).json();
+      return Reservation.array().parse(result);
     },
   });
 }
@@ -29,9 +27,7 @@ export const getReservationByIdOpts = (reservationId: string) =>
   queryOptions({
     queryKey: ["reservations", "detail", reservationId],
     async queryFn() {
-      const result = await apiKy
-        .get<Reservation>(`reservations/${reservationId}`)
-        .json();
-      return result;
+      const result = await apiKy.get(`reservations/${reservationId}`).json();
+      return Reservation.parse(result);
     },
   });
