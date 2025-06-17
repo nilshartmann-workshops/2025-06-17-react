@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import __dont_use_ky from "ky";
 
-import { Reservation } from "./types.ts";
+import { OrderBy, Reservation } from "./types.ts";
 
 export const apiKy = __dont_use_ky.extend({
   // retries im Fehlerfall besser über TanStack Query machen
@@ -13,12 +13,14 @@ export const apiKy = __dont_use_ky.extend({
   // prefixUrl: "http://localhost:7200/api",
 });
 
-export function getReservationListOpts() {
+export function getReservationListOpts(orderBy: OrderBy) {
   return queryOptions({
-    queryKey: ["reservations", "list"],
+    queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
       const reservations = apiKy
-        .get<Reservation[]>("http://localhost:7200/api/reservations")
+        .get<
+          Reservation[]
+        >("http://localhost:7200/api/reservations?orderBy=" + orderBy)
         .json();
       return reservations;
     },

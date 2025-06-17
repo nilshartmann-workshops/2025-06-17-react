@@ -1,4 +1,5 @@
 import { Box, Container } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 export default function ReservationRoute() {
   return (
@@ -13,4 +14,15 @@ export default function ReservationRoute() {
       </Box>
     </Container>
   );
+}
+
+function ReservationLoader() {
+  const { reservationId } = useParams();
+
+  if (reservationId === undefined) {
+    throw new Error("Keine Reservation Id");
+  }
+
+  // queries.ts: queryOptions
+  // <ReservationCard />
 }
