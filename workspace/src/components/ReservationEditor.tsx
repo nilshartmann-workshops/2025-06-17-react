@@ -17,8 +17,12 @@ import { z } from "zod/v4";
 // const b:B = a;
 
 const ReservationFormState = z.object({
-  customerName: z.string().nonempty(), // TextField
-  expectedGuests: z.number().min(5), // TextField type=number
+  customerName: z
+    .string()
+    .nonempty({ error: "Bitte geben Sie einen Kundennamen ein." }), // TextField
+  expectedGuests: z
+    .number()
+    .min(5, "Sie müssen mindestens fünf Leute einladen"), // TextField type=number
   specialRequests: z.string().nullish(), //  // TextField
 });
 type ReservationFormState = z.infer<typeof ReservationFormState>;
@@ -42,7 +46,12 @@ export default function ReserverationEditor() {
 
       {/*Customer name*/}
       <FormControl fullWidth margin="normal">
-        <TextField {...form.register("customerName")} label={"Customer"} />
+        <TextField
+          {...form.register("customerName")}
+          label={"Customer"}
+          error={form.formState.errors["customerName"] !== undefined}
+          helperText={form.formState.errors["customerName"]?.message}
+        />
       </FormControl>
 
       {/*Expected Guests*/}
@@ -52,6 +61,8 @@ export default function ReserverationEditor() {
             valueAsNumber: true,
           })}
           label={"Expected Guests"}
+          error={form.formState.errors.expectedGuests !== undefined}
+          helperText={form.formState.errors["expectedGuests"]?.message}
           type={"number"}
         />
       </FormControl>
@@ -64,6 +75,7 @@ export default function ReserverationEditor() {
 
       <ButtonGroup variant="outlined" size={"large"} sx={{ marginTop: "2rem" }}>
         <Button type={"submit"}>Add reservation</Button>
+        <Button onClick={() => form.reset()}>Clear</Button>
       </ButtonGroup>
     </form>
   );
