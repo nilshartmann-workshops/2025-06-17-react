@@ -13,7 +13,9 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod/v4";
 
 import { calculatePrice, foodTrucks } from "../data.ts";
+import { useCreateReservationMutation } from "../queries.ts";
 import { TimeRange } from "../types.ts";
+import EditorSnackbar from "./EditorSnackbar.tsx";
 import FoodTruckSelect from "./FoodTruckSelect.tsx";
 
 // Duck Typing
@@ -31,7 +33,12 @@ const ReservationFormState = z.object({
   expectedGuests: z
     .number()
     .min(5, "Sie müssen mindestens fünf Leute einladen"), // TextField type=number
-  specialRequests: z.string().nullish(),
+  specialRequests: z
+    .string()
+    .nullish()
+    // Die API im Backend erlaubt keine Leerstrings :-(
+    // deswegen hier Leerstring (und null) in "undefined" konvertieren
+    .transform((val) => (!val ? undefined : val)),
   // .refine((val) => !val || val === "Pizza"), //  // TextField
   timeRange: TimeRange.refine(
     (value) => {
@@ -60,8 +67,44 @@ export default function ReserverationEditor() {
   ]);
   const expectedPrice = calculatePrice(timeRange, expectedGuests);
 
-  const handleSave = (data: ReservationFormState) => {
+  const mutation = useCreateReservationMutation();
+
+  const handleSave = async (data: ReservationFormState) => {
     console.log("Handle Save, data: ", data);
+
+    try {
+      await mutation.mutateAsync(data);
+
+      // nach ERFOLGREICHER Mutation das Formular wieder leer machen
+      form.reset();
+    } finally {
+      // Fachliche Anforderung:
+      //  - wenn eine Mutation (erfolgreich oder mit Fehler) ausgeführt wurde,
+      //    wird eine Meldung angezeigt ("Speichern erfolgreich" o.ä., s.u.)
+      //    Diese Meldung soll nur solange stehen bleiben, bis das Formular erneut
+      //    verändert wird
+      // Mit form.subscribe können wir auf Änderungen am Formular-Inhalt
+      // reagieren
+      //  (mit dem Parameter kann man genau einstellen, für welche
+      //   Änderungen man sich interessiert, wir interessieren uns
+      //   für alle WERTE, die sich ändern)
+      const unsubscribe = form.subscribe({
+        formState: {
+          values: true,
+        },
+        callback: (data) => {
+          // Ein WERT im Formular wurde verwenden
+          console.log("Callback - data", data.values);
+
+          // ...dann mutation zurücksetzen (damit Meldungen verschwinden)
+          mutation.reset();
+
+          // und unseren Listener wieder abmelden (bis zur nächsten
+          // Mutation interessieren wir uns nicht für Datenänderungen)
+          unsubscribe();
+        },
+      });
+    }
   };
 
   const handleError = (error: any) => {
@@ -203,6 +246,15 @@ export default function ReserverationEditor() {
         <Button type={"submit"}>Add reservation</Button>
         <Button onClick={() => form.reset()}>Clear</Button>
       </ButtonGroup>
+
+      {mutation.isError && (
+        <EditorSnackbar severity={"error"}>
+          Could not save your reservation
+        </EditorSnackbar>
+      )}
+      {mutation.isSuccess && (
+        <EditorSnackbar severity={"success"}>Reservation saved</EditorSnackbar>
+      )}
     </form>
   );
 }

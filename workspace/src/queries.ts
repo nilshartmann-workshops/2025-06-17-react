@@ -93,3 +93,34 @@ export const useSetStatusMutation = (reservationId: string) => {
     },
   });
 };
+
+export const useCreateReservationMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(newReservation: NewReservation) {
+      const result = await apiKy
+        .post(`reservations`, {
+          json: newReservation,
+        })
+        .json();
+      return Reservation.parse(result);
+    },
+    onSuccess(data: Reservation) {
+      // 🕵️‍♂️ müssen wir das Ding hier in den Cache setzen?
+      //    -> kann man diskutieren, in unserer App eher nicht notwendig
+      queryClient.setQueryData(getReservationByIdOpts(data.id).queryKey, data);
+
+      // Die Listen sind u.U. jetzt ungültig, deswegen alle invalidieren
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "list"],
+      });
+    },
+    onError(error) {
+      console.error(
+        "Saving reservation failed with error",
+        error.message,
+        error,
+      );
+    },
+  });
+};
