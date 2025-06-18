@@ -132,6 +132,16 @@ export default function ReserverationEditor() {
               );
             }}
           />
+          <Button
+            variant="text"
+            size="small"
+            sx={{ alignSelf: "flex-start", mt: 1 }}
+            onClick={() => {
+              form.setValue("timeRange.start", dayjs().toISOString());
+            }}
+          >
+            Now
+          </Button>
         </FormControl>
         <FormControl fullWidth margin="normal">
           <Controller
@@ -156,6 +166,19 @@ export default function ReserverationEditor() {
             }}
             name={"timeRange.end"}
           />
+          <Button
+            variant="text"
+            size="small"
+            sx={{ alignSelf: "flex-start", mt: 1 }}
+            onClick={() => {
+              form.setValue(
+                "timeRange.end",
+                dayjs().add(1, "day").toISOString(),
+              );
+            }}
+          >
+            Tomorrow
+          </Button>
         </FormControl>
       </Stack>
 
