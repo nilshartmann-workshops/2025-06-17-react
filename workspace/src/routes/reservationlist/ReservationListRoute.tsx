@@ -1,10 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import OrderButtonBar from "../../components/OrderButtonBar.tsx";
 import ReservationTable from "../../components/ReservationTable.tsx";
+import ReservationTablePlaceholder from "../../components/ReservationTablePlaceholder.tsx";
 import { getReservationListOpts } from "../../queries.ts";
 import { OrderBy } from "../../types.ts";
 
@@ -22,7 +23,9 @@ export default function ReservationListRoute() {
         <OrderButtonBar />
       </Box>
 
-      <ReservationsLoader />
+      <Suspense fallback={<ReservationTablePlaceholder />}>
+        <ReservationsLoader />
+      </Suspense>
     </>
   );
 }
@@ -40,12 +43,15 @@ function ReservationsLoader() {
   const orderBy = searchParams.get("orderBy") as OrderBy;
   const [count, setCount] = useState(0);
 
-  const { data: reservations, refetch } = useSuspenseQuery(
-    getReservationListOpts(orderBy),
-  );
+  const {
+    data: reservations,
+    refetch,
+    isFetching,
+  } = useSuspenseQuery(getReservationListOpts(orderBy));
   //
   return (
     <div>
+      {isFetching && <h1>Tabelle wird aktualisiert</h1>}
       <Button onClick={() => setCount(count + 1)}>{count}</Button>
       <Button onClick={() => refetch()}>Aktualisieren</Button>
       <ReservationTable reservations={reservations} />

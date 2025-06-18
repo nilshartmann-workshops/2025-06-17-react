@@ -27,6 +27,10 @@ const router = createBrowserRouter(
       <Route
         path="reservations/:reservationId"
         element={<ReservationRoute />}
+        // loader={ () => {
+        //   // reservationId
+        //   queryClient.ensureQueryData(reservationId)
+        // }}
       />
       <Route path="create" element={<CreateReservationRoute />} />
     </Route>,
