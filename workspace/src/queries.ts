@@ -19,6 +19,8 @@ export const apiKy = __dont_use_ky.extend({
 
 export function getReservationListOpts(orderBy: OrderBy) {
   return queryOptions({
+    // staleTime: 5000,
+    // gcTime: 7000,
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
       const result = await apiKy.get("reservations?orderBy=" + orderBy).json();
@@ -45,7 +47,7 @@ export const useSetStatusMutation = (reservationId: string) => {
     // async mutationFn(data: { status: ReservationStatus; comment: string }) {
     async mutationFn(status: ReservationStatus) {
       return apiKy
-        .put(`reservations/${reservationId}/status?slow=4000`, {
+        .put(`reservations/${reservationId}/status`, {
           json: { status },
         })
         .json();
@@ -83,6 +85,10 @@ export const useSetStatusMutation = (reservationId: string) => {
       queryClient.setQueryData(getReservationByIdOpts(reservationId).queryKey, {
         ...currentReservation,
         status: input,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["reservations", "list"],
       });
     },
   });

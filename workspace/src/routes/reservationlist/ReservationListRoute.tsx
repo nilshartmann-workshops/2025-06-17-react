@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import OrderButtonBar from "../../components/OrderButtonBar.tsx";
@@ -27,13 +28,27 @@ export default function ReservationListRoute() {
 }
 
 function ReservationsLoader() {
+  useEffect(() => {
+    console.log("ReservationsLoader mounted");
+
+    return () => {
+      console.log("ReservationsLoader unmounted");
+    };
+  }, []);
   //                         v------ React Router!
   const [searchParams] = useSearchParams({ orderBy: "start" });
   const orderBy = searchParams.get("orderBy") as OrderBy;
+  const [count, setCount] = useState(0);
 
-  const { data: reservations } = useSuspenseQuery(
+  const { data: reservations, refetch } = useSuspenseQuery(
     getReservationListOpts(orderBy),
   );
   //
-  return <ReservationTable reservations={reservations} />;
+  return (
+    <div>
+      <Button onClick={() => setCount(count + 1)}>{count}</Button>
+      <Button onClick={() => refetch()}>Aktualisieren</Button>
+      <ReservationTable reservations={reservations} />
+    </div>
+  );
 }
