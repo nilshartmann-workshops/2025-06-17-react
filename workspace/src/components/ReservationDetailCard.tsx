@@ -74,7 +74,9 @@ export default function ReservationDetailCard({
             />
           </Box>
           <Button
-            onClick={() => mutation.mutate("Confirmed")}
+            onClick={() => {
+              mutation.mutate("Confirmed");
+            }}
             variant="text"
             disabled={reservation.status === "Confirmed" || mutation.isPending}
           >

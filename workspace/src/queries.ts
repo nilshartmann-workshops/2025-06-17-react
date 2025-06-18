@@ -23,9 +23,7 @@ export function getReservationListOpts(orderBy: OrderBy) {
     // gcTime: 7000,
     queryKey: ["reservations", "list", { orderBy }],
     async queryFn() {
-      const result = await apiKy
-        .get("reservations?orderBy=" + orderBy + "&slow=2400")
-        .json();
+      const result = await apiKy.get("reservations?orderBy=" + orderBy).json();
       return Reservation.array().parse(result);
     },
   });
